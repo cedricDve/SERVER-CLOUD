@@ -1,0 +1,35 @@
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "generic/ubuntu2004" 
+        
+    # Create a public network -> Bridged Network for macOS
+    config.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)" 
+    
+    ## Spin up VM using VirtualBox
+    config.vm.provider "virtualbox" do |v|
+      # VM Settings
+      v.name = "server-cloud-minikube"
+      v.memory = 2048
+      v.cpus = 2
+      # Video Memory
+      v.customize ["modifyvm", :id, "--vram", "12"]      
+  
+    end
+  
+    # Provisioning 
+    ## Shell Script -update package manager, install docker and minikube
+    config.vm.provision "shell", inline: <<-SHELL
+      # Update package manager
+      apt-get update
+  
+      # Docker
+      apt-get install docker.io -y
+      ## Add "vagrant" user to docker Group
+      usermod -aG docker vagrant 
+  
+      curl --insecure -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      install minikube-linux-amd64 /usr/local/bin/minikube
+      rm -f minikube-linux-amd64
+      sudo snap install kubectl --classic        
+    SHELL
+  end
