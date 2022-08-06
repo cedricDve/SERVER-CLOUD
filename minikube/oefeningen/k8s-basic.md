@@ -116,7 +116,7 @@ spec:
 1. Eens we deze file hebben aangemaakt kunnen we dit effectief toepassen door ``kubectl apply -f <filename>.yaml`` uit te voeren
 
     ```bash
-    kubectl apply -fnginx-test.yaml
+    kubectl apply -f nginx-test.yaml
     ```
 1. *Stel dat we meer dan 1 pod willen voorzien voor deze deployment kunnen we onze .yaml file updaten en de apply opnieuw uitvoeren.* Verander de replicacount van onze nginx deployment naar 3 en controleer of de pods en deployment zijn geupdate.
 

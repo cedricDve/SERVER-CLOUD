@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service # Internal Service ~~ type: ClusterIP
+metadata:
+  name: svc-mongodb # Name Service
+spec:
+  selector:
+    app: mongo # Name Pod 
+  ports:
+  - protocol: TCP
+    port: 27017 # Service Port
+    targetPort: 27017 # Container Port
+    

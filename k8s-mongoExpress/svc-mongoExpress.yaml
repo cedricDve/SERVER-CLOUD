@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service # External Service of type Loadbalancer
+metadata:
+  name: external-svc-mongo-express # Name Service
+spec:
+  selector:
+    app: mongo-express # Name Pod 
+  type: NodePort
+  ports:
+  - protocol: TCP   
+    port: 8081 # Service Port
+    targetPort: 8081 # Container Port
+    nodePort: 30000
+    
