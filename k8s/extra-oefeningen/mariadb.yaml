@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mariadb
+    labels:
+        app: mariadb     
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: mariadb
+    template:
+        metadata:
+            labels:
+                app: mariadb
+        spec:
+            containers:
+            - name: mariadb
+              image: mariadb # To specify a version use `<imagename>:x.yy`
+              env:
+              - name: MARIADB_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: mariadb-secret
+                    key: mariadb-password
+              ports:
+              - containerPort: 3306 # Default port used by mongo
+---
+
+apiVersion: v1
+kind: Service # Internal Service ~~ type: ClusterIP
+metadata:
+  name: svc-mariadb # Name Service
+spec:
+  selector:
+    app: mariadb # Name Pod 
+  ports:
+  - protocol: TCP
+    port: 3306 # Service Port
+    targetPort: 3306 # Container Port

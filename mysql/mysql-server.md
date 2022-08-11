@@ -1,5 +1,4 @@
 > Install MySQL
-
     
     apt-get install mysql-server    
     sudo mysql_secure_installation 

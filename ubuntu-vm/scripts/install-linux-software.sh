@@ -1,5 +1,8 @@
 #! /bin/bash
 
+sudo apt-get update
+sudo apt-get install lynx -y
+
 # Install NGINX, MySQL, PHP, phpMyAdmin , Docker, Minikube and kubectl
 
 # Install NGINX

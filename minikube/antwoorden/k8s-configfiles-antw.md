@@ -275,5 +275,5 @@ spec:
   ports:
     - protocol: TCP
       port: 8081
-      targetPort: 8081 
+      targetPort: 8081
 ````
