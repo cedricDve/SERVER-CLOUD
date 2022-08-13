@@ -6,7 +6,7 @@
                 index index.php index.html;
                 root /usr/share;
         }
-
+ca
 > Restart NGINX    
 
     sudo systemctl restart nginx
