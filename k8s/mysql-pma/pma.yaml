@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: phpmyadmin
+    labels:
+        app: phpmyadmin     
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: phpmyadmin
+    template:
+        metadata:
+            labels:
+                app: phpmyadmin
+        spec:
+            containers:
+            - name: phpmyadmin
+              image: phpmyadmin # To specify a version use `<imagename>:x.yy`
+              env:     
+              - name: MYSQL_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: mysql-secret
+                    key: mysql-password              
+              - name: PMA_PORT
+                value: "3306"
+              - name: PMA_HOST
+                valueFrom:
+                  configMapKeyRef:
+                    name: cm-phpmyadmin
+                    key: mysql-server   
+              ports:
+              - containerPort: 8080 # Default port used by mongoExpress
+
+---
+
+apiVersion: v1
+kind: Service # External Service of type Loadbalancer
+metadata:
+  name: external-svc-phpmyadmin # Name Service
+spec:
+  selector:
+    app: phpmyadmin # Name Pod 
+  type: LoadBalancer
+  ports:
+  - protocol: TCP   
+    port: 8080 # Service Port
+    targetPort: 8080 # Container Port  
