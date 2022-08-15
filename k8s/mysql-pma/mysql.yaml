@@ -1,0 +1,41 @@
+# DEPLOYMENT
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mysql
+    labels:
+        app: mysql     
+spec:
+    replicas: 
+    selector:
+        matchLabels:
+            app: mysql
+    template:
+        metadata:
+            labels:
+                app: mysql
+        spec:
+            containers:
+            - name: mysql
+              image: mysql # To specify a version use `<imagename>:x.yy`
+              env:
+              - name: MYSQL_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: mysql-secret
+                    key: mysql-password        
+              ports:
+              - containerPort: 8081
+---
+
+apiVersion: v1
+kind: Service # Internal Service ~~ type: ClusterIP
+metadata:
+  name: svc-mysql # Name Service
+spec:
+  selector:
+    app: mysql # Name Pod 
+  ports:
+  - protocol: TCP
+    port: 8081 # Service Port
+    targetPort: 8081 # Container Port
