@@ -1,0 +1,17 @@
+# Virtual Host configuration for example.com
+
+# Move the file in sites-available/ and symlink that to sites-enabled/ to enable it.
+
+server {
+       listen 80;
+       listen [::]:80;
+
+       server_name example.com;
+
+       root /var/www/example.com;
+       index index.html;
+
+       location / {
+            try_files $uri $uri/ =404;
+       }
+}

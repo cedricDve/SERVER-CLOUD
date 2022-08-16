@@ -1,0 +1,48 @@
+# Deployment for mongodb
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mongodb
+    labels:
+        app: mongo     
+spec:
+    replicas: 
+    selector:
+        matchLabels:
+            app: mongo
+    template:
+        metadata:
+            labels:
+                app: mongo
+        spec:
+            containers:
+            - name: mongo
+              image: mongo # To specify a version use `<imagename>:x.yy`
+              env:
+              - name: MONGO_INITDB_ROOT_USERNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: mongodb-secret
+                    key: mongo-root-username
+              - name: MONGO_INITDB_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: mongodb-secret
+                    key: mongo-root-password 
+              ports:
+              - containerPort: 27017 # Default port used by mongo
+
+---
+# Internal Service ~~ type: ClusterIP
+apiVersion: v1
+kind: Service 
+metadata:
+  name: svc-mongodb # Name Service
+spec:
+  selector:
+    app: mongo # Name Pod 
+  ports:
+  - protocol: TCP
+    port: 27017 # Service Port
+    targetPort: 27017 # Container Port
+    

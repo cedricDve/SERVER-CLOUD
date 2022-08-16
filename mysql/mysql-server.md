@@ -29,3 +29,5 @@ will reloads the grant tables in the mysql database enabling the changes to take
     sudo mysql -u root -p
 
     (password = Student1)
+
+

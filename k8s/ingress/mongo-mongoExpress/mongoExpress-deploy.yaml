@@ -1,0 +1,55 @@
+# Deployment for mongo-express
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mongo-express
+    labels:
+        app: mongo-express     
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: mongo-express
+    template:
+        metadata:
+            labels:
+                app: mongo-express
+        spec:
+            containers:
+            - name: mongo-express
+              image: mongo-express # To specify a version use `<imagename>:x.yy`
+              env:
+              - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: mongodb-secret
+                    key: mongo-root-username
+              - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: mongodb-secret
+                    key: mongo-root-password 
+              - name: ME_CONFIG_MONGODB_SERVER
+                valueFrom:
+                  configMapKeyRef:
+                    name: mongo-express-cm
+                    key:  mongo-server   
+              ports:
+              - containerPort: 8081 # Default port used by mongoExpress
+
+---
+# External Service of type Loadbalancer
+apiVersion: v1
+kind: Service 
+metadata:
+  name: external-svc-mongo-express # Name Service
+spec:
+  selector:
+    app: mongo-express # Name Pod 
+  type: LoadBalancer
+  ports:
+  - protocol: TCP   
+    port: 8081 # Service Port
+    targetPort: 8081 # Container Port
+    nodePort: 30000
+    
